@@ -1,0 +1,133 @@
+// Contact form styles
+.contact_wrapper {
+  svg {
+    font-size: 1em;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+}
+
+.contact-form {
+  padding-top: 20px;
+  width: 100%;
+
+  // Submit button styling
+  button {
+    float: right;
+    background-color: white;
+    color: #050f0b;
+    margin-top: 10px;
+
+    &:hover {
+      background-color: #5000ca;
+      color: white;
+    }
+  }
+}
+
+// Form layout
+.form-flex {
+  display: flex;
+  gap: 15px;
+  padding-bottom: 15px;
+
+  .MuiFormControl-root {
+    width: 100%;
+  }
+}
+
+.body-form {
+  width: 100% !important;
+  margin-bottom: 15px !important;
+}
+
+// Input field styling - complete override
+.contact-input {
+  margin-bottom: 20px !important;
+
+  // Input container
+  .MuiOutlinedInput-root {
+    background-color: #ffffff !important;
+    
+    // Text input styling
+    input {
+      color: #000000 !important;
+      background-color: transparent !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
+
+    // Textarea styling for message field
+    textarea {
+      color: #000000 !important;
+      background-color: transparent !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
+
+    // Placeholder styling
+    input::placeholder,
+    textarea::placeholder {
+      color: #666666 !important;
+      opacity: 1 !important;
+    }
+
+    // Border styling
+    .MuiOutlinedInput-notchedOutline {
+      border-color: #cccccc !important;
+    }
+
+    &:hover .MuiOutlinedInput-notchedOutline {
+      border-color: #5000ca !important;
+    }
+
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border-color: #5000ca !important;
+    }
+  }
+
+  // Label styling
+  .MuiInputLabel-root {
+    color: #666666 !important;
+    font-size: 16px !important;
+
+    &.Mui-focused {
+      color: #5000ca !important;
+    }
+  }
+
+  // Error state
+  &.Mui-error {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: #f44336 !important;
+    }
+  }
+}
+
+// Additional fallback styles
+#contact {
+  input,
+  textarea {
+    color: #000000 !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+}
+
+// Submit message styling
+.submit-message {
+  margin-top: 16px;
+  color: #4caf50;
+  text-align: center;
+  font-weight: 500;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .form-flex {
+    flex-direction: column;
+    gap: 0;
+  }
+}
