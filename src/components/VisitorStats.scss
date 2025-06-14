@@ -1,0 +1,288 @@
+.visitor-stats-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.visitor-stats-panel {
+  background: #1a1a1a;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  color: white;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #333;
+  
+  h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+  }
+}
+
+.stats-actions {
+  display: flex;
+  gap: 8px;
+  
+  button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .refresh-btn {
+    background: #5000ca;
+    color: white;
+    
+    &:hover {
+      background: #6200e3;
+    }
+  }
+  
+  .clear-btn {
+    background: #dc3545;
+    color: white;
+    
+    &:hover {
+      background: #c82333;
+    }
+  }
+  
+  .close-btn {
+    background: #6c757d;
+    color: white;
+    
+    &:hover {
+      background: #5a6268;
+    }
+  }
+}
+
+.stats-content {
+  padding: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  
+  h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #ccc;
+    font-weight: 500;
+  }
+  
+  .stat-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #5000ca;
+  }
+}
+
+.stats-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stats-section {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  
+  h4 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+  }
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stats-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #333;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  span {
+    color: #ccc;
+    font-size: 14px;
+    
+    &.count {
+      background: #5000ca;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+.recent-visits {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  
+  h4 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+  }
+}
+
+.visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.visit-item {
+  padding: 12px;
+  background: #333;
+  border-radius: 6px;
+  border-left: 3px solid #5000ca;
+  
+  .visit-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    
+    .visit-location {
+      font-weight: 500;
+      color: #fff;
+    }
+    
+    .visit-time {
+      font-size: 12px;
+      color: #aaa;
+    }
+  }
+  
+  .visit-details {
+    .visit-browser {
+      font-size: 12px;
+      color: #ccc;
+    }
+  }
+}
+
+.no-stats {
+  padding: 40px;
+  text-align: center;
+  color: #ccc;
+}
+
+.stats-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #333;
+  text-align: center;
+  
+  small {
+    color: #666;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .visitor-stats-overlay {
+    padding: 10px;
+  }
+  
+  .visitor-stats-panel {
+    max-height: 95vh;
+  }
+  
+  .stats-header {
+    padding: 16px;
+    flex-direction: column;
+    gap: 12px;
+    
+    h3 {
+      font-size: 18px;
+    }
+  }
+  
+  .stats-content {
+    padding: 16px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .stats-sections {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+}

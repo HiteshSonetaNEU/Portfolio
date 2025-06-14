@@ -1,0 +1,117 @@
+.privacy-notice {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  padding: 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.privacy-notice-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: white;
+}
+
+.privacy-text h4 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.privacy-text p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #cccccc;
+  max-width: 600px;
+}
+
+.privacy-buttons {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.privacy-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.accept-btn {
+  background: #5000ca;
+  color: white;
+}
+
+.accept-btn:hover {
+  background: #6200e3;
+  transform: translateY(-1px);
+}
+
+.decline-btn {
+  background: transparent;
+  color: #cccccc;
+  border: 1px solid #555;
+}
+
+.decline-btn:hover {
+  background: #333;
+  color: white;
+  border-color: #777;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .privacy-notice {
+    padding: 16px;
+  }
+  
+  .privacy-notice-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .privacy-text p {
+    font-size: 13px;
+    max-width: none;
+  }
+  
+  .privacy-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .privacy-buttons button {
+    flex: 1;
+    max-width: 120px;
+  }
+}
