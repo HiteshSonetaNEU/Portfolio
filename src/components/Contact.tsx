@@ -31,9 +31,9 @@ function Contact() {
       setSubmitMessage('');
 
       // EmailJS configuration
-      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_portfolio';
-      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_portfolio';
-      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'your_public_key';
+      const serviceId = 'service_2eucr4i';
+      const templateId = 'template_cb9tkxk';
+      const publicKey = 'dWTebM195_BQFOeih';
 
       const templateParams = {
         from_name: name,
