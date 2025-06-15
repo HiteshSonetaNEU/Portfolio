@@ -1,5 +1,9 @@
-// Visitor tracking utility
-class VisitorTracker {  constructor() {
+// Visitor tracking utility with Firebase global tracking
+import { db } from '../firebase/config';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+class VisitorTracker {
+  constructor() {
     this.apiKey = process.env.REACT_APP_IPGEOLOCATION_API_KEY || 'demo';
     this.trackingEnabled = true; // Always enabled
   }
@@ -194,28 +198,23 @@ class VisitorTracker {  constructor() {
     } catch (error) {
       // Silent error handling
     }
-  }
-  // Send visitor data to analytics service (silent operation)
+  }  // Send visitor data to Firebase (global tracking)
   async sendToAnalyticsService(visitorData) {
     try {
-      // Example: Send to your own backend API
-      // const response = await fetch('https://your-api.com/track-visitor', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(visitorData)
-      // });
+      // Send to Firebase Firestore for global tracking
+      await addDoc(collection(db, 'visitors'), {
+        ...visitorData,
+        timestamp: serverTimestamp(), // Server timestamp for accuracy
+        firebaseId: Math.random().toString(36).substr(2, 9) // Unique ID for this visit
+      });
       
-      // Silent tracking - no console logs for visitors to see
-      // Only you can access the data through localStorage
-      
+      // Silent success - no logs visible to visitors
       return true;
     } catch (error) {
-      // Silent error handling
+      // Silent error handling - fallback to localStorage only
       return false;
     }
-  }  // Track page view - always enabled, silent operation
+  }// Track page view - always enabled, silent operation
   async trackPageView() {
     try {
       const visitorData = await this.createVisitorSession();
@@ -270,10 +269,61 @@ class VisitorTracker {  constructor() {
         return null;
       }
     };
-    
-    window.clearVisitorData = () => {
+      window.clearVisitorData = () => {
       localStorage.removeItem('portfolio_visitors');
       console.log('Visitor data cleared');
+    };
+
+    // Global analytics from Firebase
+    window.getGlobalAnalytics = async () => {
+      try {
+        const tracker = new VisitorTracker();
+        const globalStats = await tracker.getGlobalAnalytics();
+        
+        if (globalStats) {
+          console.log('=== GLOBAL VISITOR ANALYTICS ===');
+          console.log('Total global visits:', globalStats.totalGlobalVisits);
+          console.log('Unique countries:', globalStats.uniqueCountries);
+          console.log('Unique cities:', globalStats.uniqueCities);
+          console.log('Countries:', globalStats.countries);
+          console.log('Cities:', globalStats.cities);
+          console.log('Browsers:', globalStats.browsers);
+          console.log('Referrers:', globalStats.referrers);
+          console.log('Visits by day:', globalStats.visitsByDay);
+          console.log('Recent visits:', globalStats.recentGlobalVisits.slice(0, 5));
+          console.log('=================================');
+          return globalStats;        } else {
+          console.log('Global analytics not available - check Firebase configuration');
+          return null;
+        }
+      } catch (error) {
+        console.error('%c🔧 FIREBASE SETUP REQUIRED', 'color: #ff6b6b; font-weight: bold; font-size: 14px;');
+        
+        if (error.message.includes('FIREBASE_SETUP_REQUIRED')) {
+          console.log('%c📋 Quick Fix Steps:', 'color: #4ecdc4; font-weight: bold;');
+          console.log('1. Go to your Firebase Console: https://console.firebase.google.com/');
+          console.log('2. Click on your project: portfolio-analytics-e0431');
+          console.log('3. Go to Firestore Database → Rules');
+          console.log('4. Replace the rules with:');
+          console.log(`%crules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /visitors/{document} {
+      allow write: if true;
+      allow read: if true; // Temporary - restrict this later
+    }
+  }
+}`, 'background: #f0f0f0; padding: 10px; border-radius: 4px;');
+          console.log('5. Click "Publish" and try again!');
+        } else if (error.message.includes('FIREBASE_PROJECT_NOT_FOUND')) {
+          console.log('%c❌ Firebase project not found. Check your .env file.', 'color: #ff6b6b;');
+        } else {
+          console.log('%c❌ Firebase Error:', 'color: #ff6b6b;', error.message);
+        }
+        
+        console.log('%c💡 Alternative: Use getVisitorData() for local analytics', 'color: #95a5a6;');
+        return null;
+      }
     };
   }
 
@@ -307,10 +357,63 @@ class VisitorTracker {  constructor() {
     
     return Object.entries(grouped)
       .sort(([,a], [,b]) => b - a)
-      .reduce((acc, [key, value]) => {
-        acc[key] = value;
+      .reduce((acc, [key, value]) => {        acc[key] = value;
         return acc;
       }, {});
+  }
+  // Get global visitor analytics from Firebase (for site owner only)
+  async getGlobalAnalytics() {
+    try {
+      const { getDocs, query, collection: getCollection, orderBy, limit } = await import('firebase/firestore');
+      
+      // Get all visitor records from Firebase
+      const visitorsRef = getCollection(db, 'visitors');
+      const q = query(visitorsRef, orderBy('timestamp', 'desc'), limit(1000)); // Last 1000 visits
+      const querySnapshot = await getDocs(q);
+      
+      const allVisits = [];
+      querySnapshot.forEach((doc) => {
+        allVisits.push({ id: doc.id, ...doc.data() });
+      });
+
+      // Calculate analytics
+      const stats = {
+        totalGlobalVisits: allVisits.length,
+        uniqueCountries: [...new Set(allVisits.map(v => v.location?.country).filter(Boolean))].length,
+        uniqueCities: [...new Set(allVisits.map(v => `${v.location?.city}, ${v.location?.country}`).filter(c => !c.includes('undefined')))].length,
+        browsers: this.groupBy(allVisits, v => v.browser?.browser || 'Unknown'),
+        countries: this.groupBy(allVisits, v => v.location?.country || 'Unknown'),
+        cities: this.groupBy(allVisits, v => v.location?.city || 'Unknown'),
+        referrers: this.groupBy(allVisits, v => v.referrer || 'Direct'),
+        recentGlobalVisits: allVisits.slice(0, 20), // Most recent 20 visits
+        visitsByDay: this.groupVisitsByDay(allVisits)
+      };
+      
+      return stats;
+    } catch (error) {
+      // Enhanced error handling with helpful messages
+      if (error.code === 'permission-denied' || error.message.includes('Missing or insufficient permissions')) {
+        throw new Error('FIREBASE_SETUP_REQUIRED: You need to set up Firestore security rules. Please follow the Firebase setup guide.');
+      } else if (error.code === 'failed-precondition' || error.message.includes('indexes')) {
+        throw new Error('FIREBASE_INDEX_REQUIRED: Firestore needs to create indexes. Try again in a few minutes.');
+      } else if (error.message.includes('not found') || error.code === 'not-found') {
+        throw new Error('FIREBASE_PROJECT_NOT_FOUND: Check your Firebase project ID in .env file.');
+      } else {
+        throw new Error(`FIREBASE_ERROR: ${error.message}`);
+      }
+    }
+  }
+
+  // Helper to group visits by day
+  groupVisitsByDay(visits) {
+    const grouped = {};
+    visits.forEach(visit => {
+      if (visit.timestamp && visit.timestamp.seconds) {
+        const date = new Date(visit.timestamp.seconds * 1000).toISOString().split('T')[0];
+        grouped[date] = (grouped[date] || 0) + 1;
+      }
+    });
+    return grouped;
   }
 }
 
