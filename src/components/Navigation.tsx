@@ -64,8 +64,12 @@ function Navigation({parentToChild, modeChange}: any) {
   const downloadResume = () => {
     // Create a link to download the resume PDF
     const link = document.createElement('a');
-    link.href = '/Hitesh Soneta.pdf'; // Path to your resume in the public folder
+    
+    // Use the renamed file without spaces for better compatibility
+    const baseUrl = process.env.PUBLIC_URL || '';
+    link.href = `${baseUrl}/Hitesh_Soneta_Resume.pdf`;
     link.download = 'Hitesh_Soneta_Resume.pdf';
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

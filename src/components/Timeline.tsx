@@ -71,7 +71,7 @@ function Timeline() {
             <h3 className="vertical-timeline-element-title">Full Stack Developer</h3>
             <h4 className="vertical-timeline-element-subtitle">Code-B, Mumbai, India</h4>
             <p>
-              Developed and deployed full-stack web applications, contributing to both frontend and backend. Customized backend software to support personalized user experiences, enhancing client engagement and aligning application features with unique client needs. Resolved 95% of client issues, serving as a dedicated point of contact. Improved customer retention by 40% and boosted average order value by 25% through tailored solutions.
+              Designed and hosted a complete-stack Nest.js and React application, supporting 3x user-based growth within four months when monolithic systems hit scaling limits, through careful refactoring to microservices, and setting up robust CI/CD pipelines. Built back-end services using Nest.js and AWS Lambda, shortening the servers' response times by 35% and the infrastructure cost by 15% in the quarterly peak-usage periods, by architecting microservices, reducing cold starts, and CI/CD-based automating deployments. Developed from scratch a React Native mobile application, implementing live-reload testing, and creating custom native bridges for platform-specific UI.
             </p>
           </VerticalTimelineElement>
         </VerticalTimeline>
